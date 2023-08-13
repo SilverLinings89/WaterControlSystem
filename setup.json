@@ -1,0 +1,65 @@
+{
+    "trays": [
+        {
+            "name": "tray 1",
+            "plant_description": "basil",
+            "has_moisture_sensor": true,
+            "moisture_sensor_name": "moisture sensor 1",
+            "has_pump": true,
+            "pump_name": "pump 1"
+        },
+        {
+            "name": "tray 2",
+            "plant_description": "chives",
+            "has_moisture_sensor": true,
+            "moisture_sensor_name":"moisture sensor 2",
+            "has_pump": true,
+            "pump_name": "pump 2"
+        },
+        {
+            "name": "tray 3",
+            "plant_description": "cillantro",
+            "has_moisture_sensor": true,
+            "moisture_sensor_name":"moisture sensor 3",
+            "has_pump": true,
+            "pump_name": "pump 3"
+        }
+    ],
+    "pumps": [
+        {
+            "name": "pump 1",
+            "relay": 0
+        },
+        {
+            "name": "pump 2",
+            "relay": 1
+        },
+        {
+            "name": "pump 3",
+            "relay": 2
+        }
+    ],
+    "moisture sensors": [
+        {
+            "name": "moisture sensor 1",
+            "pin": 0
+        },
+        {
+            "name": "moisture sensor 2",
+            "pin": 1
+        },
+        {
+            "name": "moisture sensor 3",
+            "pin": 2
+        }
+    ],
+    "reservoirs": [
+        {
+            "name": "reservoir 1",
+            "has sensor": true,
+            "sensor name": "ultrasonic water level sensor 1",
+            "contained pumps": ["pump 1", "pump 2", "pump 3"],
+            "volume": 5 
+        }
+    ]
+}
