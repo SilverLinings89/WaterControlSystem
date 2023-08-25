@@ -61,5 +61,20 @@
             "contained pumps": ["pump 1", "pump 2", "pump 3"],
             "volume": 5 
         }
+    ],
+    "power": [
+        {
+            "name": "smart socket 1",
+            "type": 0,
+            "minValue": 0,
+            "capturesAll": true,
+            "captures": []
+        }
+    ],
+    "temperature sensors": [
+        {
+            "name": "temperature sensor 1",
+            "type": "dht21"
+        }
     ]
 }
