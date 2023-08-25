@@ -68,13 +68,15 @@
             "type": 0,
             "minValue": 0,
             "capturesAll": true,
-            "captures": []
+            "captures": [],
+            "ip": "192.168.0.1"
         }
     ],
     "temperature sensors": [
         {
             "name": "temperature sensor 1",
-            "type": "dht21"
+            "type": "dht21",
+            "pin": 0
         }
     ]
 }
