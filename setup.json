@@ -69,7 +69,7 @@
             "minValue": 0,
             "capturesAll": true,
             "captures": [],
-            "ip": "192.168.0.1"
+            "ip": "192.168.0.121"
         }
     ],
     "temperature sensors": [

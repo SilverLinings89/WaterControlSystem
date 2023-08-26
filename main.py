@@ -7,10 +7,6 @@ import datetime
 
 SYSTEM_CONFIG_COLLECTION_NAME = "SYSTEM_CONFIG"
 
-client = MongoClient("mongodb+srv://" + config.DATABASE_USER_NAME + ":" + config.DATABASE_USER_PASSWORD + "@" + config.DATABASE_SERVER_NAME +"/?retryWrites=true&w=majority")
-db = client[config.DATABASE_NAME]
-setup = load_setup()
-
 def load_setup():
     with open("setup.json", "r") as json_file:
         json_data = json.load(json_file)
@@ -39,18 +35,18 @@ def open_or_create_timeseries_collection(collection_name, granularity):
         db.create_collection(collection_name, timeseries= {
             timeField: "timestamp",
             metaField: "metadata",
-            granularity: "seconds"
+            granularity: granularity
         })
     return db[collection_name]
 
 def publish_local_setup():
     global setup
     system_config_collection = open_or_create_collection(SYSTEM_CONFIG_COLLECTION_NAME)
-    existing_document = system_config_collection.find_one(query)
+    existing_document = system_config_collection.find_one({})
     if existing_document:
         system_config_collection.update_one({}, {"$set": setup})
     else: 
-        collection.insert_one(setup)
+        system_config_collection.insert_one(setup)
 
 def get_ip_from_electriciy_device_name(device_name):
     global setup
@@ -58,7 +54,6 @@ def get_ip_from_electriciy_device_name(device_name):
         if sensor["name"] == device_name:
             return sensor["ip"]
     return ""
-
 
 def get_data_from_p110(device_name):
     device_ip = get_ip_from_electriciy_device_name(device_name)
@@ -71,16 +66,20 @@ def get_data_from_p110(device_name):
 def open_or_create_energy_collection(device_name):
     global db
     global setup
-    return open_or_create_timeseries_collection("power" + device_name)
+    return open_or_create_timeseries_collection("power" + device_name, "seconds")
 
 def publish_electricity_data(device_name):
+    ip_adresse = get_ip_from_electriciy_device_name(device_name)
+    if ip_adresse == "":
+        print("Could not electricity sensor in setup config.")
+        return
     electricity_collection = open_or_create_energy_collection(device_name)
     measurement = get_data_from_p110(device_name)
     time_series_entry = {
         "timestamp": datetime.datetime.now(),
         "metadata": {
             "uptime_today(min)": measurement['result']['today_runtime'],
-            "uptime_month(min)": measurement['result']['month_uptime'],
+            "uptime_month(min)": measurement['result']['month_runtime'],
             "energy_today(Wh)": measurement['result']['today_energy'],
             "energy_month(Wh)": measurement['result']['month_energy']
         },
@@ -88,6 +87,10 @@ def publish_electricity_data(device_name):
     }
     electricity_collection.insert_one(time_series_entry)
 
+client = MongoClient("mongodb+srv://" + config.DATABASE_USER_NAME + ":" + config.DATABASE_USER_PASSWORD + "@" + config.DATABASE_SERVER_NAME +"/?retryWrites=true&w=majority")
+db = client[config.DATABASE_NAME]
+setup = load_setup()
+
 publish_local_setup()
-publish_electricity_data()
+publish_electricity_data("smart socket 1")
 client.close()
